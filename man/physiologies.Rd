@@ -12,8 +12,8 @@ Valid keyboards can be checked with \code{showPhys}. If 'all', all
 physiologies are imported.}
 
 \item{full_source}{Logical. If \code{TRUE}, the Attribute_source column will
-contain full source information. If \code{FALSE}, the Attribute_source column will
-contain shortened versions of the sources. Default is \code{FALSE}.}
+contain full source information. If \code{FALSE}, the Attribute_source column
+will contain shortened versions of the sources. Default is \code{FALSE}.}
 }
 \value{
 A list of data.frames in tidy format.

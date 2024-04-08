@@ -18,8 +18,8 @@ argument tax_id_type = "Taxon_name" must also be used.}
 A character vector with the names of the signatures for a taxon.
 }
 \description{
-\code{getTaxonSignatures} returns the names of all of the signatures associated
-with a particular taxon. More details can be found in the main
+\code{getTaxonSignatures} returns the names of all of the signatures
+associated with a particular taxon. More details can be found in the main
 bugphyzz vignette; please run \code{browseVignettes("bugphyzz")}.
 }
 \examples{

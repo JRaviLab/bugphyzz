@@ -24,8 +24,8 @@ makeSignatures(
 superkingdom, kingdom, phylum, class, order, family, genus, species, strain.
 They can be combined. "mixed" is equivalent to select all valid ranks.}
 
-\item{evidence}{A character vector. Valid options: exp, igc, nas, tas, tax, asr.
-They can be combined. Default is all.}
+\item{evidence}{A character vector. Valid options: exp, igc, nas, tas, tax,
+asr. They can be combined. Default is all.}
 
 \item{frequency}{A character vector. Valid options: always, usually,
 sometimes, rarely, unknown. They can be combined. By default, "rarely" is
