@@ -94,7 +94,7 @@ Metadata associated with attribute values:
     [10-fold cross-validation analysis](https://github.com/waldronlab/taxPProValidation).
     Matthews correlation coefficient (MCC) for discrete attributes and
     R-squared for numeric attributes. Default threshold value is 0.5 and above.
-    * NSTI: Nearest sequence taxon index from [PICRUSt](https://doi.org/10.1038/nbt.2676)
+    * NSTI: Nearest sequence taxon index from [PICRUSt2](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7365738/)
     or the [castor package](https://cran.r-project.org/web/packages/castor/index.html).
     Relevant for numeric values only.
 
