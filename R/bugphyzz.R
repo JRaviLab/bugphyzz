@@ -54,7 +54,7 @@ utils::globalVariables(c(
 #' names(bp)
 #'
 importBugphyzz <- function(
-        version = "d3fd894", force_download = FALSE, v = 0.5,
+        version = "10.5281/zenodo.10980813", force_download = FALSE, v = 0.5,
         exclude_rarely = TRUE
 
 ) {
@@ -367,7 +367,7 @@ getTaxonSignatures <- function(tax, bp, ...) {
 
     output <- vector("list", length(files))
     for (i in seq_along(output)) {
-        output[[i]] <- utils::read.csv(files, header = TRUE, skip = 1) |>
+        output[[i]] <- utils::read.csv(files[i], header = TRUE, skip = 1) |>
             dplyr::mutate(Attribute = tolower(Attribute))
     }
     return(output)

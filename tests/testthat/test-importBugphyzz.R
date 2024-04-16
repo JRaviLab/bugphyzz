@@ -189,6 +189,17 @@ test_that("importBugphyzz works with hash", {
     expect_true(all(map_lgl(bp, checkUniqueAnnotations)))
 })
 
+test_that("importBugphyzz works with Zenodo DOI", {
+    bp <- importBugphyzz(version = "10.5281/zenodo.10980813", force_download = TRUE)
+    expect_true(all("data.frame" == map_chr(bp, class)))
+    expect_true(all(map_lgl(bp, ~ nrow(.x) > 0)))
+    expect_true(all(map_lgl(bp, checkColumnNames)))
+    expect_true(all(map_lgl(bp, checkColumnTypes)))
+    expect_true(all(map_lgl(bp, checkNAs)))
+    expect_true(all(map_lgl(bp, checkCuration)))
+    expect_true(all(map_lgl(bp, checkUniqueAnnotations)))
+})
+
 ## TODO create test for using Zenodo
 test_that("importBugphyzz doesn't work with other words", {
     expect_error(importBugphyzz(version = "abcd-1234", force_download = TRUE))

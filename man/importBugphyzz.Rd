@@ -5,7 +5,7 @@
 \title{Import bugphyzz}
 \usage{
 importBugphyzz(
-  version = "d3fd894",
+  version = "10.5281/zenodo.10980813",
   force_download = FALSE,
   v = 0.5,
   exclude_rarely = TRUE
