@@ -8,7 +8,7 @@ These files are necessary for 1) the bugphyzz package to work properly and
 
 What follows is the description of each file.
 
-## [attribute_sources.tsv](./attribute_sources.tsv)
+## attribute_sources.tsv
 
 Contains the original sources of bugphyzz annotations.
 
@@ -30,7 +30,7 @@ Options:
 - tax. IBD = inferred from biological aspect of descendant.
 - asr. anscestral state reconstruction.
 
-## [attributes.tsv](./attributes.tsv)
+## attributes.tsv
 
 It contains the description of the attribute values included in bugphyzz.
 
@@ -44,7 +44,7 @@ Columns:
 | attribute_group | The group(s) where an attribute name could be found. |
 | description | The meaning of the attribute described in the 'attribute' column. |
 
-## [spreadsheet_custmolinks.tsv](./spreadsheet_customlinks.tsv)
+## spreadsheet_custmolinks.tsv
 
 Links for datasets in google spreadsheets that are not in tidy format and
 need to be converted to tidy format.
@@ -59,7 +59,7 @@ Columns:
 | functionname | The name of the function (unexported) in bugphyzz. |
 | source_link |  Link to the source spreadsheet on Google Docs. |
 
-## [spreadsheet_links.tsv](./spreadsheet_links.tsv)
+## spreadsheet_links.tsv
 
 Links for datasets in spreadsheets that are already in tidy format.
 
@@ -73,7 +73,7 @@ Columns:
 | link | Link to the csv export. |
 | source_link | Link to the source spreadsheet. |
 
-## [curation_template.tsv](./curation_template.tsv)
+## curation_template.tsv
 
 Contains the formal description of the data model in the spreadsheets imported
 by the physiologies funtion.
@@ -90,7 +90,7 @@ Columns:
 | value_test | If 'string' the test of validity is based on the regular expresion. If '.attributes', it's based on the function .attriubtes (no exported). |
 | column_class | One of the R classes for atomic vectors. |
 
-## [thresholds.tsv](./thresholds.tsv)
+## thresholds.tsv
 
 Tresholds for converting numeric/range data to categorical.
 
@@ -105,7 +105,7 @@ Columns:
 | unit | units used for numeric data. |
 
 
-## [validation_summary.tsv](./validation_summary.tsv)
+## validation_summary.tsv
 
 This file was obtained from the waldronlab/taxPProValidtion repository hosted
 on GitHub. It contains the results of a 10-fold cross-validation analysis
