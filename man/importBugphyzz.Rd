@@ -5,15 +5,15 @@
 \title{Import bugphyzz}
 \usage{
 importBugphyzz(
-  version = "devel",
+  version = "10.5281/zenodo.10980813",
   force_download = FALSE,
   v = 0.5,
   exclude_rarely = TRUE
 )
 }
 \arguments{
-\item{version}{Character string indicating the version.
-Options: devel or a zenodo record.}
+\item{version}{Character string indicating the version. Default is the
+latest release on Zenodo.  Options: Zenodo DOI, GitHub commit hash, or devel.}
 
 \item{force_download}{Logical value. Force a fresh download of the data or
 use the one stored in the cache (if available). Default is FALSE.}

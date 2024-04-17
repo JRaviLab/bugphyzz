@@ -1,3 +1,4 @@
+## Script to generate sysdata.Rda
 
 library(taxizedb)
 library(bugphyzz)

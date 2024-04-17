@@ -1,6 +1,8 @@
 ---
 title: "bugphyzz"
-subtitle: "A harmonized data resource and software for enrichment analysis of microbial physiologies"
+subtitle:
+    "A harmonized data resource and software for enrichment analysis of
+    microbial physiologies"
 author:
   - name: "Samuel Gamboa"
     email: "Samuel.Gamboa.Tuz@gmail.com"
@@ -18,8 +20,8 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -28,7 +30,8 @@ knitr::opts_chunk$set(
 [bugphyzz](https://github.com/waldronlab/bugphyzzExports)
 is an electronic database of standardized microbial annotations that allows:
 1. annotation of microbial taxa from multiple sources, and
-2. creation of microbial signatures based on shared attributes for bug set enrichment analysis.
+2. creation of microbial signatures based on shared attributes for bug set
+enrichment analysis.
 
 # Data schema
 
@@ -63,7 +66,8 @@ observed or measured.
 5. _Attribute type_: A character string indicating the data type:
     * numeric: Attributes with numeric values (e.g., growth temperature: 25°C).
     * binary: Attributes with boolean values (e.g., butyrate-producing: TRUE).
-    * multistate-intersection: A set of related binary attributes (e.g., habitat).
+    * multistate-intersection: A set of related binary attributes
+    (e.g., habitat).
     * multistate-union: Attributes with three or more values represented as
     character strings (e.g., aerophilicity: aerobic, anaerobic,
     or facultatively anaerobic).
@@ -86,10 +90,11 @@ Metadata associated with attribute values:
 9. _Support values_:
     * Frequency and Score: Confidence that a given taxon exhibits a trait
     based on the curator’s knowledge or results of ASR or IBD.
-    * Validation: Score from the [10-fold cross-validation analysis](https://github.com/waldronlab/taxPProValidation).
+    * Validation: Score from the
+    [10-fold cross-validation analysis](https://github.com/waldronlab/taxPProValidation).
     Matthews correlation coefficient (MCC) for discrete attributes and
     R-squared for numeric attributes. Default threshold value is 0.5 and above.
-    * NSTI: Nearest sequence taxon index from [PICRUSt](https://doi.org/10.1038/nbt.2676)
+    * NSTI: Nearest sequence taxon index from [PICRUSt2](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7365738/)
     or the [castor package](https://cran.r-project.org/web/packages/castor/index.html).
     Relevant for numeric values only.
 
@@ -103,13 +108,17 @@ three, two, or one of these criteria.
 
 **Additional information**
 
-+ Description of **sources** and **attributes**: https://waldronlab.io/bugphyzz/articles/attributes.html
++ Description of **sources** and **attributes**:
+https://waldronlab.io/bugphyzz/articles/attributes.html
 
-+ Description of ontology **evidence** codes: https://geneontology.org/docs/guide-go-evidence-codes/
++ Description of ontology **evidence** codes:
+https://geneontology.org/docs/guide-go-evidence-codes/
 
-+ Description of **frequency** keywords and scores were based on: https://grammarist.com/grammar/adverbs-of-frequency/
++ Description of **frequency** keywords and scores were based on:
+https://grammarist.com/grammar/adverbs-of-frequency/
 
-+ IBD and ASR were performed with taxPPro: https://github.com/waldronlab/taxPPro
++ IBD and ASR were performed with taxPPro:
+https://github.com/waldronlab/taxPPro
 
 # Analysis and Stats
 
@@ -176,7 +185,7 @@ attribute (discrete):
 
 ```{r}
 aer_sigs_g <- makeSignatures(
-  dat = bp[["aerophilicity"]], tax_id_type = "Taxon_name", tax_level = "genus"
+    dat = bp[["aerophilicity"]], tax_id_type = "Taxon_name", tax_level = "genus"
 )
 map(aer_sigs_g, head)
 ```
@@ -186,8 +195,8 @@ temperature attribute (numeric):
 
 ```{r}
 gt_sigs_sp <- makeSignatures(
-  dat = bp[["growth temperature"]], tax_id_type = "Taxon_name",
-  tax_level = 'species'
+    dat = bp[["growth temperature"]], tax_id_type = "Taxon_name",
+    tax_level = 'species'
 )
 map(gt_sigs_sp, head)
 ```
@@ -197,8 +206,8 @@ attribute (numeric):
 
 ```{r}
 gt_sigs_mix <- makeSignatures(
-  dat = bp[["growth temperature"]], tax_id_type = "Taxon_name",
-  tax_level = "mixed", min = 0, max = 25
+    dat = bp[["growth temperature"]], tax_id_type = "Taxon_name",
+    tax_level = "mixed", min = 0, max = 25
 )
 map(gt_sigs_mix, head)
 ```
@@ -207,8 +216,8 @@ map(gt_sigs_mix, head)
 
 ```{r}
 ap_sigs_mix <- makeSignatures(
-  dat = bp[["animal pathogen"]], tax_id_type = "NCBI_ID",
-  tax_level = "mixed", evidence = c("exp", "igc", "nas", "tas")
+    dat = bp[["animal pathogen"]], tax_id_type = "NCBI_ID",
+    tax_level = "mixed", evidence = c("exp", "igc", "nas", "tas")
 )
 map(ap_sigs_mix, head)
 ```
@@ -217,7 +226,7 @@ map(ap_sigs_mix, head)
 
 ```{r}
 sigs <- map(bp, makeSignatures) |> 
-  list_flatten(name_spec = "{inner}")
+    list_flatten(name_spec = "{inner}")
 length(sigs)
 ```
 
@@ -228,12 +237,14 @@ head(map(sigs, head))
 # Run a bug set enrichment analysis
 
 Bugphyzz signatures are suitable for conducting bug set enrichment analysis
-using existing tools available in R. In this example, we will perform a set enrichment analysis using a dataset
+using existing tools available in R. In this example, we will perform a set
+enrichment analysis using a dataset
 with a known biological ground truth.
 
 The dataset originates from the Human Microbiome Project (2012) and compares
 subgingival and supragingival plaque.
-This data will be imported using the [MicrobiomeBenchmarkData package](https://bioconductor.org/packages/release/data/experiment/html/MicrobiomeBenchmarkData.html).
+This data will be imported using the
+[MicrobiomeBenchmarkData package](https://bioconductor.org/packages/release/data/experiment/html/MicrobiomeBenchmarkData.html).
 For the implementation of the enrichment analysis, we will utilize the
 Gene Set Enrichment Analysis (GSEA) method available in the
 [EnrichmentBrowser package](https://bioconductor.org/packages/release/bioc/html/EnrichmentBrowser.html).
@@ -265,7 +276,7 @@ Perform differential abundance (DA) analysis to get sets of microbes:
 
 ```{r}
 tse_subset$GROUP <- ifelse(
-  tse_subset$body_subsite == 'subgingival_plaque', 0, 1
+    tse_subset$body_subsite == 'subgingival_plaque', 0, 1
 )
 se <- EnrichmentBrowser::deAna(
     expr = tse_subset, de.method = 'limma', padj.method = 'fdr', 
@@ -275,7 +286,7 @@ se <- EnrichmentBrowser::deAna(
 dat <- data.frame(colData(se))
 design <- stats::model.matrix(~ GROUP, data = dat)
 assay(se) <- limma::voom(
-  counts = assay(se), design = design, plot = FALSE
+    counts = assay(se), design = design, plot = FALSE
 )$E
 ```
 
@@ -283,15 +294,15 @@ Perform GSEA and display the results:
 
 ```{r, message=FALSE}
 gsea <- EnrichmentBrowser::sbea(
-  method = 'gsea', se = se, gs = aer_sigs_g, perm = 1000,
-  alpha = 0.1 
+    method = 'gsea', se = se, gs = aer_sigs_g, perm = 1000,
+    alpha = 0.1 
 )
 gsea_tbl <- as.data.frame(gsea$res.tbl) |> 
-  mutate(
-    GENE.SET = ifelse(PVAL < 0.05, paste0(GENE.SET, ' *'), GENE.SET),
-    PVAL = round(PVAL, 3),
-  ) |> 
-  dplyr::rename(BUG.SET = GENE.SET)
+    mutate(
+        GENE.SET = ifelse(PVAL < 0.05, paste0(GENE.SET, ' *'), GENE.SET),
+        PVAL = round(PVAL, 3),
+    ) |> 
+        dplyr::rename(BUG.SET = GENE.SET)
 knitr::kable(gsea_tbl)
 ```
 

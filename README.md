@@ -27,3 +27,7 @@ After installation, check vignettes with:
 ```r
 browseVigenttes("bugphyzz")
 ```
+
+TODO:
+
+- Add scores to signatures
