@@ -7,7 +7,7 @@
 importBugphyzz(
   version = "10.5281/zenodo.10980813",
   force_download = FALSE,
-  v = 0.5,
+  v = 0.8,
   exclude_rarely = TRUE
 )
 }
@@ -18,7 +18,7 @@ latest release on Zenodo.  Options: Zenodo DOI, GitHub commit hash, or devel.}
 \item{force_download}{Logical value. Force a fresh download of the data or
 use the one stored in the cache (if available). Default is FALSE.}
 
-\item{v}{Validation value. Default 0.5 (see details).}
+\item{v}{Validation value. Default 0.8 (see details).}
 
 \item{exclude_rarely}{Default is TRUE. Exclude values with
 Frequency == FALSE (see details).}

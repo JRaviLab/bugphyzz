@@ -16,7 +16,7 @@ utils::globalVariables(c(
 #' latest release on Zenodo.  Options: Zenodo DOI, GitHub commit hash, or devel.
 #' @param force_download Logical value. Force a fresh download of the data or
 #' use the one stored in the cache (if available). Default is FALSE.
-#' @param v Validation value. Default 0.5 (see details).
+#' @param v Validation value. Default 0.8 (see details).
 #' @param exclude_rarely Default is TRUE. Exclude values with
 #' Frequency == FALSE (see details).
 #'
@@ -54,7 +54,7 @@ utils::globalVariables(c(
 #' names(bp)
 #'
 importBugphyzz <- function(
-        version = "10.5281/zenodo.10980813", force_download = FALSE, v = 0.5,
+        version = "10.5281/zenodo.10980813", force_download = FALSE, v = 0.8,
         exclude_rarely = TRUE
 
 ) {
