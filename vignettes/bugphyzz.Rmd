@@ -8,6 +8,18 @@ author:
     email: "Samuel.Gamboa.Tuz@gmail.com"
   - name: "Levi Waldron"
     email: "levi.waldron@sph.cuny.edu"
+data: "`r doc_date()`"
+package: "`r pkg_ver('bugphyzz')`"
+abstract: >
+    The **bugphyzz** package simplifies the import of harmonized microbial
+    annotations into R from diverse sources. These annotations, including
+    extended taxa via ancestral state reconstruction, are organized into tidy
+    `data.frame` objects, facilitating the creation of microbial signatures.
+    These signatures can be used for enrichment analysis of microbiome omic
+    data, akin to gene set enrichment analysis using tools like
+    [EnrichmentBrowser](https://bioconductor.org/packages/release/bioc/html/EnrichmentBrowser.html)
+    and [bugsigdbr](https://bioconductor.org/packages/release/bioc/html/bugsigdbr.html),
+    which are also available on Bioconductor. Annotaions are imported from [Zenodo](https://zenodo.org/doi/10.5281/zenodo.10980653).
 output: 
   BiocStyle::html_document:
     fig_caption: true
@@ -27,11 +39,31 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-[bugphyzz](https://github.com/waldronlab/bugphyzzExports)
-is an electronic database of standardized microbial annotations that allows:
-1. annotation of microbial taxa from multiple sources, and
-2. creation of microbial signatures based on shared attributes for bug set
-enrichment analysis.
+The bugphyzz package offers a convenient way to import a collection of
+harmonized microbial annotations from various sources into R.
+These annotations are available on [Zenodo](https://zenodo.org/doi/10.5281/zenodo.10980653).
+In addition to being harmonized, some annotations have been extended to
+other taxa based on the phylogeny from
+[‘The All-Species Living Tree Project’](https://imedea.uib-csic.es/mmg/ltp/)
+using ancestral state reconstruction (ASR) methods.
+The annotations are provided in tabular format and organized into distinct
+tidy `data.frame` objects
+(for details, see the “Data schema” section below).
+
+Once imported, these `data.frame` objects can be used to create microbial
+signatures, which are lists of taxa with shared characteristics.
+We anticipate these signatures being utilized for enrichment analysis of
+microbiome omic data by implementing workflows similar to those used in
+gene set enrichment analysis; for example, using the
+[EnrichmentBrowser](https://bioconductor.org/packages/release/bioc/html/EnrichmentBrowser.html)
+package (a detailed example is provided in a section below).
+
+A similar package in Bioconductor is the [bugsigdbr](https://bioconductor.org/packages/release/bioc/html/bugsigdbr.html)
+package, which imports literature-published microbial signatures from the
+[BugSigDB](https://bugsigdb.org/Main_Page) database and has been used for
+bug set enrichment analysis (BSEA). Moreover, the [writeGMT function](https://bioconductor.org/packages/release/bioc/vignettes/bugsigdbr/inst/doc/bugsigdbr.html#13_Writing_microbe_signatures_to_file_in_GMT_format)
+from the bugsigdbr package can export bugphyzz signatures as GMT text
+files.
 
 # Data schema
 
