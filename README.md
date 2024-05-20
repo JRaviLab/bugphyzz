@@ -27,3 +27,8 @@ After installation, check vignettes with:
 ```r
 browseVigenttes("bugphyzz")
 ```
+
+## Data hosted on Zenodo
+
+Link: https://zenodo.org/doi/10.5281/zenodo.10980653
+
