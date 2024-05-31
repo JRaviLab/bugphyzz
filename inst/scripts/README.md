@@ -114,15 +114,17 @@ annotations for the package.
 
 Detailed information (code and explanation) can be found on the repository.
 
-The file was downloaded on April 1st, 2024 from this URL (pay attention to 
+The file was downloaded on May 31, 2024 from this URL (pay attention to 
 the commit hash):
 
-https://raw.githubusercontent.com/waldronlab/taxPProValidation/e736097/validation_summary.tsv
+https://raw.githubusercontent.com/waldronlab/taxPProValidation/a7a31b0/validation_summary.tsv 
 
 The code used, which was executed directly in the extdata directory, was:
 
+This is version 1.0.2
+
 ```bash
-wget https://raw.githubusercontent.com/waldronlab/taxPProValidation/e736097/validation_summary.tsv
+wget https://raw.githubusercontent.com/waldronlab/taxPProValidation/a7a31b0/validation_summary.tsv
 ```
 
 | Column name | Description |
