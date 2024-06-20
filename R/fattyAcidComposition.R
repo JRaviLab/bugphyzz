@@ -1,8 +1,4 @@
-
 ## Function for importing fatty acid compositions
-## TODO This dataset needs more curation.
-## TODO Names of the Fatty Acids should be more "user-friendly"
-## TODO Maybe a threshold should be decided to consider a FA as present or not.
 .fattyAcidComposition <- function(){
     link <- .customLinks() |>
         dplyr::filter(functionname == "fattyAcidComposition") |>
