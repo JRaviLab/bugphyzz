@@ -172,9 +172,10 @@ makeSignatures <- function(
         )
     }
     dat <- dat |>
-        dplyr::filter(Rank %in% tax_level) |>
-        dplyr::filter(Evidence %in% evidence) |>
-        dplyr::filter(Frequency %in% frequency)
+        {\(y) y[which(y$Rank %in% tax_level),]}() |> 
+        {\(y) y[which(y$Evidence %in% evidence),]}() |> 
+        {\(y) y[which(y$Frequency %in% frequency),]}()
+        
     if (!nrow(dat)) {
         warning(
             "Not enough data for creating signatures.",
@@ -235,11 +236,11 @@ getTaxonSignatures <- function(tax, bp, ...) {
 
 # Non exported functions ----------------------------------------------------
 .makeSignaturesDiscrete <- function(dat, tax_id_type = "NCBI_ID") {
-    dat |>
-        dplyr::mutate(
-            Attribute = paste0("bugphyzz:", Attribute, "|", Attribute_value)
-        ) |>
-        {\(y) split(y, y$Attribute)}() |>
+    dat$Attribute <- paste0(
+        "bugphyz:", dat$Attribute, "|", dat$Attribute_value
+    )
+    dat |> 
+        {\(y) S4Vectors::split(y, y$Attribute)}() |>
         lapply(function(x) unique(x[[tax_id_type]]))
 }
 
@@ -259,15 +260,13 @@ getTaxonSignatures <- function(tax, bp, ...) {
             )
             max <- max(dat$Attribute_value)
         }
-        dat <- dat |>
-            dplyr::filter(
-                Attribute_value >= min & Attribute_value <= max
-            ) |>
-            dplyr::mutate(
-                Attribute = paste0(
-                    "bugphyzz:", Attribute, "| >=", min, " & <=", max
-                )
-            )
+        
+        dat <- dat[
+            which(dat$Attribute_value >= min & dat$Attribute_value <= max),
+        ]
+        dat$Attribute <- paste0(
+            "bugphyzz:", dat$Attribute, "| >=", min, " & <=", max
+        )
     } else {
         thr <- .thresholds() |>
             dplyr::filter(Attribute_group == unique(dat$Attribute))
@@ -292,7 +291,7 @@ getTaxonSignatures <- function(tax, bp, ...) {
         }
     }
     dat |>
-        {\(y) split(y, y$Attribute)}() |>
+        {\(y) S4Vectors::split(y, y$Attribute)}() |>
         lapply(function(x) unique(x[[tax_id_type]]))
 }
 
