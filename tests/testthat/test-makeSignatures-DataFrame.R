@@ -1,9 +1,9 @@
 library(purrr)
 library(S4Vectors)
 bp <- map(importBugphyzz(), DataFrame)
-sigsNames <- map(bp, ~ makeSignatures(.x, tax_id_type = "Taxon_name")) |>
+sigsNames <- map(bp, ~ makeSignatures(.x, taxIdType = "Taxon_name")) |>
     list_flatten(name_spec = "{inner}")
-sigsIDs <- map(bp, ~ makeSignatures(.x, tax_id_type = "NCBI_ID")) |>
+sigsIDs <- map(bp, ~ makeSignatures(.x, taxIdType = "NCBI_ID")) |>
     list_flatten(name_spec = "{inner}")
 
 test_that("makeSignatures works with IDs", {
