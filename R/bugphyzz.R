@@ -367,7 +367,7 @@ getTaxonSignatures <- function(tax, bp, ...) {
     output <- vector("list", length(files))
     for (i in seq_along(output)) {
         output[[i]] <- utils::read.csv(files[i], header = TRUE, skip = 1) |>
-            dplyr::mutate(Attribute = tolower(.data$Attribute))
+            dplyr::mutate(Attribute = tolower(Attribute))
     }
     return(output)
 }

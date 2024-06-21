@@ -10,7 +10,7 @@
             names_to = "Attribute_new", values_to = "Attribute_value"
         ) |>
         dplyr::mutate(NCBI_ID = as.character(NCBI_ID))
-    dplyr::left_join(fac_long, ranks_parents, by = "NCBI_ID") |>
+    dplyr::left_join(fac_long, ranksParents, by = "NCBI_ID") |>
         as.data.frame() |>
         .addSourceInfo() |>
         purrr::modify_at(
@@ -21,7 +21,7 @@
         ) |>
         dplyr::select(-Attribute) |>
         dplyr::rename(Attribute = Attribute_new) |>
-        .reorderColumns(attr_type = 'numeric')
+        .reorderColumns(attrType = 'numeric')
 }
 
 ## Function to import custom links
