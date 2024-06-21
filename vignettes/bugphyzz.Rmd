@@ -217,7 +217,7 @@ attribute (discrete):
 
 ```{r}
 aer_sigs_g <- makeSignatures(
-    dat = bp[["aerophilicity"]], tax_id_type = "Taxon_name", tax_level = "genus"
+    dat = bp[["aerophilicity"]], taxIdType = "Taxon_name", taxLevel = "genus"
 )
 map(aer_sigs_g, head)
 ```
@@ -227,8 +227,8 @@ temperature attribute (numeric):
 
 ```{r}
 gt_sigs_sp <- makeSignatures(
-    dat = bp[["growth temperature"]], tax_id_type = "Taxon_name",
-    tax_level = 'species'
+    dat = bp[["growth temperature"]], taxIdType = "Taxon_name",
+    taxLevel = 'species'
 )
 map(gt_sigs_sp, head)
 ```
@@ -238,8 +238,8 @@ attribute (numeric):
 
 ```{r}
 gt_sigs_mix <- makeSignatures(
-    dat = bp[["growth temperature"]], tax_id_type = "Taxon_name",
-    tax_level = "mixed", min = 0, max = 25
+    dat = bp[["growth temperature"]], taxIdType = "Taxon_name",
+    taxLevel = "mixed", min = 0, max = 25
 )
 map(gt_sigs_mix, head)
 ```
@@ -248,8 +248,8 @@ map(gt_sigs_mix, head)
 
 ```{r}
 ap_sigs_mix <- makeSignatures(
-    dat = bp[["animal pathogen"]], tax_id_type = "NCBI_ID",
-    tax_level = "mixed", evidence = c("exp", "igc", "nas", "tas")
+    dat = bp[["animal pathogen"]], taxIdType = "NCBI_ID",
+    taxLevel = "mixed", evidence = c("exp", "igc", "nas", "tas")
 )
 map(ap_sigs_mix, head)
 ```

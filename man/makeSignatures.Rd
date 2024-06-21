@@ -6,11 +6,11 @@
 \usage{
 makeSignatures(
   dat,
-  tax_id_type = "NCBI_ID",
-  tax_level = "mixed",
+  taxIdType = "NCBI_ID",
+  taxLevel = "mixed",
   evidence = c("exp", "igc", "tas", "nas", "tax", "asr"),
   frequency = c("always", "usually", "sometimes", "unknown"),
-  min_size = 10,
+  minSize = 10,
   min = NULL,
   max = NULL
 )
@@ -18,9 +18,9 @@ makeSignatures(
 \arguments{
 \item{dat}{A data.frame.}
 
-\item{tax_id_type}{A character string. Valid options: NCBI_ID, Taxon_name.}
+\item{taxIdType}{A character string. Valid options: NCBI_ID, Taxon_name.}
 
-\item{tax_level}{A character vector. Taxonomic rank. Valid options:
+\item{taxLevel}{A character vector. Taxonomic rank. Valid options:
 superkingdom, kingdom, phylum, class, order, family, genus, species, strain.
 They can be combined. "mixed" is equivalent to select all valid ranks.}
 
@@ -31,7 +31,7 @@ asr. They can be combined. Default is all.}
 sometimes, rarely, unknown. They can be combined. By default, "rarely" is
 excluded.}
 
-\item{min_size}{Minimum number of bugs in a signature. Default is 10.}
+\item{minSize}{Minimum number of bugs in a signature. Default is 10.}
 
 \item{min}{Minimum value (inclusive). Only for numeric attributes.
 Default is NULL.}

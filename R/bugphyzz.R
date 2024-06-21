@@ -14,10 +14,10 @@ utils::globalVariables(c(
 #'
 #' @param version Character string indicating the version. Default is the
 #' latest release on Zenodo.  Options: Zenodo DOI, GitHub commit hash, or devel.
-#' @param force_download Logical value. Force a fresh download of the data or
+#' @param forceDownload Logical value. Force a fresh download of the data or
 #' use the one stored in the cache (if available). Default is FALSE.
 #' @param v Validation value. Default 0.8 (see details).
-#' @param exclude_rarely Default is TRUE. Exclude values with
+#' @param excludeRarely Default is TRUE. Exclude values with
 #' Frequency == FALSE (see details).
 #'
 #' @details
@@ -37,12 +37,12 @@ utils::globalVariables(c(
 #' imported. The minimum value can be adjusted with the `v` argument (only
 #' values between 0 and 1).
 #'
-#' ## Frequency (exclude_rarely argument)
+#' ## Frequency (excludeRarely argument)
 #' One of the variables in the bugphyzz data.frames is "Frequency", which
 #' can adopt values of
 #' "always", "usually", "sometimes", "rarely", or "never". By default
 #' "never" and "rarely" are excluded. "rarely" could be included with
-#' `exclude_rarely = FALSE`. To learn more about these frequency keywords
+#' `excludeRarely = FALSE`. To learn more about these frequency keywords
 #' please check the bugphyzz vignette with `browseVignettes("bugphyzz")`.
 #'
 #' @return A list of tidy data frames.
@@ -54,14 +54,14 @@ utils::globalVariables(c(
 #' names(bp)
 #'
 importBugphyzz <- function(
-        version = "10.5281/zenodo.10980813", force_download = FALSE, v = 0.8,
-        exclude_rarely = TRUE
+        version = "10.5281/zenodo.10980813", forceDownload = FALSE, v = 0.8,
+        excludeRarely = TRUE
 
 ) {
 
     ## output is a list of three data.frames
     ## one of each: binary, multistate, numeric
-    output <- .downloadResource(version, force_download)
+    output <- .downloadResource(version, forceDownload)
 
     ## TODO add release version
     output <- lapply(output, function(x) split(x, x$Attribute))
@@ -90,13 +90,13 @@ importBugphyzz <- function(
         dplyr::mutate(attribute = tolower(attribute))
 
     output <- purrr::map(output, ~ {
-        attr_type <- unique(.x$Attribute_type)
-        if (attr_type == "binary") {
+        attrType <- unique(.x$Attribute_type)
+        if (attrType == "binary") {
             val <- dplyr::select(val, Attribute = attribute, value)
             o <- dplyr::left_join(.x, val, by = "Attribute" )
         } else if (
-            attr_type == "multistate-intersection" ||
-            attr_type == "multistate-union"
+            attrType == "multistate-intersection" ||
+            attrType == "multistate-union"
         ) {
             val <- dplyr::select(
                 val, Attribute = physiology, Attribute_value = attribute, value
@@ -105,7 +105,7 @@ importBugphyzz <- function(
                 dplyr::mutate(.x, Attribute_value = tolower(Attribute_value)),
                 val, by = c("Attribute", "Attribute_value")
             )
-        } else if (attr_type == "numeric") {
+        } else if (attrType == "numeric") {
             val <- dplyr::select(val, Attribute = attribute, value)
             o <- dplyr::left_join(.x, val, by = "Attribute") |>
                 dplyr::rename(NSTI = nsti)
@@ -118,7 +118,7 @@ importBugphyzz <- function(
             dplyr::rename(Validation = value)
     })
 
-    if (exclude_rarely) {
+    if (excludeRarely) {
         output <- purrr::map(
             output, ~ dplyr::filter(.x, Frequency != "rarely")
         )
@@ -133,8 +133,8 @@ importBugphyzz <- function(
 #' run `browseVignettes("bugphyz")` for detailed examples.
 #'
 #' @param dat A data.frame.
-#' @param tax_id_type A character string. Valid options: NCBI_ID, Taxon_name.
-#' @param tax_level A character vector. Taxonomic rank. Valid options:
+#' @param taxIdType A character string. Valid options: NCBI_ID, Taxon_name.
+#' @param taxLevel A character vector. Taxonomic rank. Valid options:
 #' superkingdom, kingdom, phylum, class, order, family, genus, species, strain.
 #' They can be combined. "mixed" is equivalent to select all valid ranks.
 #' @param evidence A character vector. Valid options: exp, igc, nas, tas, tax,
@@ -142,7 +142,7 @@ importBugphyzz <- function(
 #' @param frequency A character vector. Valid options: always, usually,
 #' sometimes, rarely, unknown. They can be combined. By default, "rarely" is
 #' excluded.
-#' @param min_size Minimum number of bugs in a signature. Default is 10.
+#' @param minSize Minimum number of bugs in a signature. Default is 10.
 #' @param min Minimum value (inclusive). Only for numeric attributes.
 #' Default is NULL.
 #' @param max Maximum value (inclusive). Only for numeric attributes.
@@ -158,21 +158,21 @@ importBugphyzz <- function(
 #' sigs <- purrr::list_flatten(sigs, name_spec = "{inner}")
 #'
 makeSignatures <- function(
-        dat, tax_id_type = "NCBI_ID",
-        tax_level = "mixed",
+        dat, taxIdType = "NCBI_ID",
+        taxLevel = "mixed",
         evidence = c("exp", "igc", "tas", "nas", "tax", "asr"),
         frequency = c("always", "usually", "sometimes", "unknown"),
-        min_size = 10, min = NULL, max = NULL
+        minSize = 10, min = NULL, max = NULL
 ) {
-    attr_type <- unique(dat$Attribute_type)
-    if ("mixed" %in% tax_level) {
-        tax_level <- c(
+    attrType <- unique(dat$Attribute_type)
+    if ("mixed" %in% taxLevel) {
+        taxLevel <- c(
             "kingdom", "phylum", "class", "order", "family", "genus", "species",
             "strain"
         )
     }
     dat <- dat |>
-        {\(y) y[which(y$Rank %in% tax_level),]}() |> 
+        {\(y) y[which(y$Rank %in% taxLevel),]}() |> 
         {\(y) y[which(y$Evidence %in% evidence),]}() |> 
         {\(y) y[which(y$Frequency %in% frequency),]}()
         
@@ -185,16 +185,16 @@ makeSignatures <- function(
         return(NULL)
     }
     if (
-        attr_type %in%
+        attrType %in%
         c("multistate-intersection", "binary", "multistate-union")
         ) {
-        s <- .makeSignaturesDiscrete(dat = dat, tax_id_type = tax_id_type)
-    } else if (attr_type %in% c("range", "numeric")) {
+        s <- .makeSignaturesDiscrete(dat = dat, taxIdType = taxIdType)
+    } else if (attrType %in% c("range", "numeric")) {
         s <- .makeSignaturesNumeric(
-            dat = dat, tax_id_type = tax_id_type, min = min, max = max
+            dat = dat, taxIdType = taxIdType, min = min, max = max
         )
     }
-    output <- purrr::keep(s, ~ length(.x) >= min_size)
+    output <- purrr::keep(s, ~ length(.x) >= minSize)
     if (!length(output)) {
         warning(
             "Not enough data for creating signatures.",
@@ -212,7 +212,7 @@ makeSignatures <- function(
 #' bugphyzz vignette; please run `browseVignettes("bugphyzz")`.
 #'
 #' @param tax A valid NCBI ID or taxon name. If taxon name is used, the
-#' argument tax_id_type = "Taxon_name" must also be used.
+#' argument taxIdType = "Taxon_name" must also be used.
 #' @param bp List of data.frames imported with \code{importBugphyzz}.
 #' @param ... Arguments passed to \code{makeSignatures}.
 #'
@@ -224,7 +224,7 @@ makeSignatures <- function(
 #' taxonName <- "Escherichia coli"
 #' bp <- importBugphyzz()
 #' sig_names_1 <- getTaxonSignatures(taxid, bp)
-#' sig_names_2 <- getTaxonSignatures(taxonName, bp, tax_id_type = "Taxon_name")
+#' sig_names_2 <- getTaxonSignatures(taxonName, bp, taxIdType = "Taxon_name")
 #'
 getTaxonSignatures <- function(tax, bp, ...) {
     sigs <- purrr::map(bp, makeSignatures, ...)
@@ -235,17 +235,17 @@ getTaxonSignatures <- function(tax, bp, ...) {
 }
 
 # Non exported functions ----------------------------------------------------
-.makeSignaturesDiscrete <- function(dat, tax_id_type = "NCBI_ID") {
+.makeSignaturesDiscrete <- function(dat, taxIdType = "NCBI_ID") {
     dat$Attribute <- paste0(
         "bugphyz:", dat$Attribute, "|", dat$Attribute_value
     )
     dat |> 
         {\(y) S4Vectors::split(y, y$Attribute)}() |>
-        lapply(function(x) unique(x[[tax_id_type]]))
+        lapply(function(x) unique(x[[taxIdType]]))
 }
 
 .makeSignaturesNumeric <- function(
-        dat, tax_id_type = "NCBI_ID", min = NULL, max = NULL
+        dat, taxIdType = "NCBI_ID", min = NULL, max = NULL
 ) {
     if (!is.null(min) || !is.null(max)) {
         if (is.null(min)) {
@@ -270,29 +270,29 @@ getTaxonSignatures <- function(tax, bp, ...) {
     } else {
         thr <- .thresholds() |>
             dplyr::filter(Attribute_group == unique(dat$Attribute))
-        attr_name <- thr$Attribute
-        min_values <- thr$lower
-        max_values <- thr$upper
+        attrName <- thr$Attribute
+        minValues <- thr$lower
+        maxValues <- thr$upper
         dat$tmp_col <- NA
-        for (i in seq_along(attr_name)) {
-            if (is.na(min_values[i]))
-                min_values[i] <- min(dat$Attribute_value) - 0.01
-            if (is.na(max_values[i]))
-                max_values[i] <- max(dat$Attribute_value)
+        for (i in seq_along(attrName)) {
+            if (is.na(minValues[i]))
+                minValues[i] <- min(dat$Attribute_value) - 0.01
+            if (is.na(maxValues[i]))
+                maxValues[i] <- max(dat$Attribute_value)
             pos <- which(
-                dat$Attribute_value > min_values[i] &
-                    dat$Attribute_value <= max_values[i]
+                dat$Attribute_value > minValues[i] &
+                    dat$Attribute_value <= maxValues[i]
             )
-            dat$tmp_col[pos] <- attr_name[i]
+            dat$tmp_col[pos] <- attrName[i]
             dat$Attribute[pos] <- paste0(
-                "bugphyzz:", dat$Attribute[pos], "|", attr_name[i], "| > ",
-                round(min_values[i], 2), " & <= ", max_values[i]
+                "bugphyzz:", dat$Attribute[pos], "|", attrName[i], "| > ",
+                round(minValues[i], 2), " & <= ", maxValues[i]
             )
         }
     }
     dat |>
         {\(y) S4Vectors::split(y, y$Attribute)}() |>
-        lapply(function(x) unique(x[[tax_id_type]]))
+        lapply(function(x) unique(x[[taxIdType]]))
 }
 
 .thresholds <- function() {
@@ -329,15 +329,15 @@ getTaxonSignatures <- function(tax, bp, ...) {
 }
 
 ## Import a version of bupghyzz
-.downloadResource <- function(version, force_download) {
+.downloadResource <- function(version, forceDownload) {
     if (stringr::str_detect(version, "^10.5281/zenodo.[0-9]+$")) {
         suffix <- sub("^10.5281/zenodo\\.", "", version)
-        output <- .downloadZ(suffix, force_download)
+        output <- .downloadZ(suffix, forceDownload)
     } else if (
         version == "devel" ||
             stringr::str_detect(version, stringr::regex("^[:alnum:]{7}$"))
         ){
-        output <- .downloadGH(version, force_download)
+        output <- .downloadGH(version, forceDownload)
     } else {
         stop("Version must be a Zenodo DOI, GitHub commit hash, or 'devel'.")
     }
@@ -345,24 +345,24 @@ getTaxonSignatures <- function(tax, bp, ...) {
 }
 
 ## Function for downloading data on Zenodo
-.downloadZ <- function(record, force_download) {
-    base_url <- paste0("https://zenodo.org/api/records/", record)
-    req <- httr2::request(base_url)
+.downloadZ <- function(record, forceDownload) {
+    baseUrl <- paste0("https://zenodo.org/api/records/", record)
+    req <- httr2::request(baseUrl)
     res <- httr2::req_perform(req)
     l <- httr2::resp_body_json(res)
 
-    file_names_api <- purrr::map_chr(l$files, ~ .x$links$self)
-    file_names_url <- sub(
-        "(^.*)(api/)(.*)(/content$)", "\\1\\3", file_names_api
+    fileNamesApi <- purrr::map_chr(l$files, ~ .x$links$self)
+    fileNamesUrl <- sub(
+        "(^.*)(api/)(.*)(/content$)", "\\1\\3", fileNamesApi
     )
 
     rpath <- .getResource(
         rname = paste0("bugphyzz.zip"),
-        url = file_names_url, verbose = TRUE, force = force_download
+        url = fileNamesUrl, verbose = TRUE, force = forceDownload
     )
-    temp_dir <- tempdir()
-    utils::unzip(zipfile = rpath, exdir = temp_dir, junkpaths = TRUE)
-    files <- list.files(temp_dir, pattern = "csv", full.names = TRUE)
+    tempDir <- tempdir()
+    utils::unzip(zipfile = rpath, exdir = tempDir, junkpaths = TRUE)
+    files <- list.files(tempDir, pattern = "csv", full.names = TRUE)
 
     output <- vector("list", length(files))
     for (i in seq_along(output)) {
@@ -373,11 +373,11 @@ getTaxonSignatures <- function(tax, bp, ...) {
 }
 
 ## Function for downloading data on GitHub
-.downloadGH <- function(version, force_download) {
-    file_suffix <- c("binary", "multistate", "numeric")
+.downloadGH <- function(version, forceDownload) {
+    fileSuffix <- c("binary", "multistate", "numeric")
     urls <- paste0(
         "https://github.com/waldronlab/bugphyzzExports/raw/", version,
-        "/bugphyzz_", file_suffix, ".csv"
+        "/bugphyzz_", fileSuffix, ".csv"
     )
     names(urls) <-  c("binary", "multistate", "numeric")
     output <- vector("list", length(urls))
@@ -386,7 +386,7 @@ getTaxonSignatures <- function(tax, bp, ...) {
         names(output)[i] <- names(urls)[i]
         rpath <- .getResource(
             rname = paste0("bugphyzz_", names(urls)[i], ".csv"),
-            url = urls[i], verbose = TRUE, force = force_download
+            url = urls[i], verbose = TRUE, force = forceDownload
         )
         output[[i]] <- utils::read.csv(rpath, header = TRUE, skip = 1) |>
             dplyr::mutate(Attribute = tolower(Attribute))
