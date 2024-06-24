@@ -304,17 +304,47 @@ tse_subset <- tse_genus[rowSums(assay(tse_genus) >= 1) >= min_n_samples,]
 tse_subset
 ```
 
-Perform differential abundance (DA) analysis to get sets of microbes:
+Let's use the edgeR method for differential abundance analysis and
+obtain sets of microbes.
+Subgingival plaque will be used as reference
+or "control", so negative values will mean enrichment in the subgingival plaque
+and positive values will mean enrichment in the supragingival plaque.
+
+Perform differential abundance (DA) analysis:
 
 ```{r}
 tse_subset$GROUP <- ifelse(
     tse_subset$body_subsite == 'subgingival_plaque', 0, 1
 )
 se <- EnrichmentBrowser::deAna(
-    expr = tse_subset, de.method = 'limma', padj.method = 'fdr', 
+    expr = tse_subset, de.method = 'edgeR', padj.method = 'fdr', 
     filter.by.expr = FALSE, 
 )
+```
 
+It's recommended to perform a normalization step of the counts before
+running GSEA. From the original [GSEA user guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideTEXT.htm):
+"GSEA does not normalize RNA-seq data.
+RNA-seq data must be normalized for between-sample comparisons using an
+external normalization procedure (e.g. those in DESeq2 or Voom)."
+
+In this example, we are treating the microbiome
+data as RNA-seq (see: https://link.springer.com/article/10.1186/s13059-020-02104-1).
+Let's use the `limma::voom` function.
+
+A glimpse to the assay stored in the SE:
+
+```{r}
+assay(se)[1:5, 1:5] # counts
+```
+
+From the `?limma::voom` documentation, input should be "a numeric matrix
+containing raw counts...". Note that the assay in the SummarizedExperiment
+will be replaced with normalized counts.
+
+Perform normalization step:
+
+```{r}
 dat <- data.frame(colData(se))
 design <- stats::model.matrix(~ GROUP, data = dat)
 assay(se) <- limma::voom(
@@ -322,12 +352,22 @@ assay(se) <- limma::voom(
 )$E
 ```
 
+The output is a "numeric matrix of normalized expression values on the
+log2 scale" as described in the `?lima::voom` documentation. This output
+is ready for GSEA.
+
+```{r}
+assay(se)[1:5, 1:5] # normalized counts
+```
+
 Perform GSEA and display the results:
 
 ```{r, message=FALSE}
 gsea <- EnrichmentBrowser::sbea(
     method = 'gsea', se = se, gs = aer_sigs_g, perm = 1000,
-    alpha = 0.1 
+    # Alpha is the FDR threshold (calculated above) to consider a feature as
+    # significant.
+    alpha = 0.1
 )
 gsea_tbl <- as.data.frame(gsea$res.tbl) |> 
     mutate(
