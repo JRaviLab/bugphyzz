@@ -69,7 +69,6 @@ importBugphyzz <- function(
     ## one of each: binary, multistate, numeric
     output <- .downloadResource(version, forceDownload)
 
-    ## TODO add release version
     output <- lapply(output, function(x) split(x, x$Attribute))
     output <- purrr::list_flatten(output)
 
