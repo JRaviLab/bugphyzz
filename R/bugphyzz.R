@@ -73,21 +73,6 @@ importBugphyzz <- function(
     output <- lapply(output, function(x) split(x, x$Attribute))
     output <- purrr::list_flatten(output)
 
-    ## TODO correct plant pathogenicity name earlier in the workflow or
-    ## better yet, directly in the curation
-    pos <- which(names(output) == "plant pathogenity")
-    names(output)[pos] <- "plant pathogenicity"
-    output <- purrr::map(output, ~ {
-        .x |>
-            dplyr::mutate(
-                Attribute = ifelse(
-                    Attribute == "plant pathogenity",
-                    "plant pathogenicity",
-                    Attribute
-                )
-            )
-    })
-
     names(output) <- purrr::map_chr(output, ~ unique(.x$Attribute))
     val <- .validationData() |>
         dplyr::filter(rank == "all") |>

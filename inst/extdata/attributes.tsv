@@ -193,7 +193,7 @@
 "growth temperature"	"growth temperature"	"numeric"	NA	NA
 "oral"	"habitat"	"logical"	NA	NA
 "optimal ph"	"optimal ph"	"numeric"	NA	NA
-"plant pathogenity"	"plant pathogenicity"	"numeric"	NA	NA
+"plant pathogenicity"	"plant pathogenicity"	"numeric"	NA	NA
 "blade of grass from raritan river nj, usa"	"isolation site"	"logical"	NA	NA
 "hot swamp from kunashir island, russia"	"isolation site"	"logical"	NA	NA
 "30-m-tall sulfide mound in the iheya north field, japan"	"isolation site"	"logical"	NA	NA
