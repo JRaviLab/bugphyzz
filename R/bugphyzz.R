@@ -10,7 +10,8 @@ utils::globalVariables(c(
 #'
 #' \code{importBugphyzz} imports bugphyzz annotations as a list of
 #' tidy data.frames. To learn more about the structure of the data.frames
-#' please check the bugphyzz vignette with `browseVignettes("bugphyzz")`.
+#' please check the bugphyzz vignette with `browseVignettes("bugphyzz")` or
+#' `vignette("bugphyzz", "bugphyzz").
 #'
 #' @param version Character string indicating the version. Default is the
 #' latest release on Zenodo.  Options: Zenodo DOI, GitHub commit hash, or devel.
@@ -44,6 +45,11 @@ utils::globalVariables(c(
 #' "never" and "rarely" are excluded. "rarely" could be included with
 #' `excludeRarely = FALSE`. To learn more about these frequency keywords
 #' please check the bugphyzz vignette with `browseVignettes("bugphyzz")`.
+#' 
+#' ## Sources
+#' By default, the datasets imported with the `importBugphuzz` function
+#' will always return a shortened version of the source. Please use
+#' vigette("sources", "bugphyz") to see the full sources.
 #'
 #' @return A list of tidy data frames.
 #' @export

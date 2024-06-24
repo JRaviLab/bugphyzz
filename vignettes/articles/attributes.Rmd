@@ -26,8 +26,6 @@ library(dplyr)
 library(purrr)
 ```
 
-## Sources
-
 ```{r, echo=FALSE}
 sources_fname <- system.file(
   "extdata", "attribute_sources.tsv", package = "bugphyzz", mustWork = TRUE
@@ -39,8 +37,6 @@ sources <- readr::read_tsv(sources_fname, show_col_types = FALSE) |>
     `Full source` = full_source
   )
 ```
-
-The `r nrow(sources)` sources of annotations in bugphyzz:
 
 ```{r, echo=FALSE}
 DT::datatable(

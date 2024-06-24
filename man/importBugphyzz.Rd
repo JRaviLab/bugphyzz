@@ -29,7 +29,8 @@ A list of tidy data frames.
 \description{
 \code{importBugphyzz} imports bugphyzz annotations as a list of
 tidy data.frames. To learn more about the structure of the data.frames
-please check the bugphyzz vignette with \code{browseVignettes("bugphyzz")}.
+please check the bugphyzz vignette with \code{browseVignettes("bugphyzz")} or
+`vignette("bugphyzz", "bugphyzz").
 }
 \details{
 \subsection{Data structure}{
@@ -59,6 +60,13 @@ can adopt values of
 "never" and "rarely" are excluded. "rarely" could be included with
 \code{excludeRarely = FALSE}. To learn more about these frequency keywords
 please check the bugphyzz vignette with \code{browseVignettes("bugphyzz")}.
+}
+
+\subsection{Sources}{
+
+By default, the datasets imported with the \code{importBugphuzz} function
+will always return a shortened version of the source. Please use
+vigette("sources", "bugphyz") to see the full sources.
 }
 }
 \examples{
