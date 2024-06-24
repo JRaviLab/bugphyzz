@@ -6,8 +6,9 @@
 \usage{
 makeSignatures(
   dat,
-  taxIdType = "NCBI_ID",
-  taxLevel = "mixed",
+  taxIdType = c("NCBI_ID", "Taxon_name"),
+  taxLevel = c("mixed", "superkingdom", "phylum", "class", "order", "family", "genus",
+    "species", "strain"),
   evidence = c("exp", "igc", "tas", "nas", "tax", "asr"),
   frequency = c("always", "usually", "sometimes", "unknown"),
   minSize = 10,

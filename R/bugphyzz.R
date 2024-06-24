@@ -164,17 +164,24 @@ importBugphyzz <- function(
 #' sigs <- purrr::list_flatten(sigs, name_spec = "{inner}")
 #'
 makeSignatures <- function(
-        dat, taxIdType = "NCBI_ID",
-        taxLevel = "mixed",
+        dat,
+        taxIdType = c("NCBI_ID", "Taxon_name"),
+        taxLevel = c("mixed", "superkingdom", "phylum", "class", "order",
+                     "family", "genus", "species", "strain"),
         evidence = c("exp", "igc", "tas", "nas", "tax", "asr"),
         frequency = c("always", "usually", "sometimes", "unknown"),
         minSize = 10, min = NULL, max = NULL
 ) {
+    taxIdType <- match.arg(arg = taxIdType, several.ok = FALSE)
+    taxLevel <- match.arg(arg = taxLevel, several.ok = TRUE)
+    evidence <- match.arg(arg = evidence, several.ok = TRUE)
+    frequency <- match.arg(arg = frequency, several.ok = TRUE)
+    
     attrType <- unique(dat$Attribute_type)
     if ("mixed" %in% taxLevel) {
         taxLevel <- c(
-            "kingdom", "phylum", "class", "order", "family", "genus", "species",
-            "strain"
+            "superkingdom", "phylum", "class", "order", "family", "genus",
+            "species", "strain"
         )
     }
     dat <- dat |>
