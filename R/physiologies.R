@@ -30,23 +30,25 @@ physiologies <- function(keyword = 'all', fullSource = FALSE) {
         spreadsheets <- spreadsheets[names(spreadsheets) %in% keyword]
         bacdive <- .reshapeBacDive(.getBacDive(verbose = FALSE))
         bacdive <- bacdive[names(bacdive) %in% keyword]
-        physiologies <- vector('list', length(keyword))
-        for (i in seq_along(keyword)) {
+        physiologies <- lapply(seq_along(keyword), function(i) {
             df1 <- spreadsheets[[keyword[i]]]
             df2 <- bacdive[[keyword[i]]]
-            physiologies[[i]] <- dplyr::bind_rows(df1, df2)
-            names(physiologies)[i] <- keyword[i]
+            o <- dplyr::bind_rows(df1, df2)
             message('Finished ', keyword[i], '.')
-        }
+            o
+        })
+        names(physiologies) <- keyword
     } else if (cond1 && !cond2) {
         spreadsheets <- .importSpreadsheets(keyword = keyword)
         physiologies <- spreadsheets[names(spreadsheets) %in% keyword]
+        ## Not creating a vector. Only usin the side effect of the for loop.
         for (i in seq_along(keyword)) {
             message('Finished ', keyword[i], '.')
         }
     } else if (!cond1 && cond2) {
         bacdive <- .reshapeBacDive(.getBacDive(verbose = FALSE))
         physiologies <- bacdive[names(bacdive) %in% keyword]
+        ## Not creating a vector. Only using the side effect of the for loop.
         for (i in seq_along(keyword)) {
             message('Finished ', keyword[i], '.')
         }
@@ -65,7 +67,7 @@ physiologies <- function(keyword = 'all', fullSource = FALSE) {
         if (fullSource) {
             df$Attribute_source <- df$fullSource
         }
-        df$fullSource <- NULL
+        df$full_source <- NULL
 
         df <- .reorderColumns(
             df = df,
@@ -157,18 +159,16 @@ showPhys <- function(whichNames = 'all') {
     )
     links <- utils::read.table(fname, header = TRUE, sep = '\t')
     links <- links[links[['physiology']] %in% keyword,]
-    spreadsheets <- vector('list', nrow(links))
-    for (i in seq_along(spreadsheets)) {
+    spreadsheets <- lapply(seq_len(nrow(links)), function(i) {
         physName <- links[i, 'physiology', drop = FALSE][[1]]
         attrType <- links[i, 'attribute_type', drop = FALSE][[1]]
-        names(spreadsheets)[i] <- physName
         url <- links[i, 'link', drop = FALSE][[1]]
         df <- dplyr::distinct(utils::read.csv(url))
         df[['Attribute_type']] <- attrType
         df[['Attribute_group']] <- physName
         df[['NCBI_ID']] <- as.character(df[['NCBI_ID']])
         df <- df[!is.na(df[['Attribute_value']]),]
-
+        
         if (unique(df[['Attribute_type']]) == 'numeric') {
             df <- .numericToRange(df)
         } else if (unique(df[['Attribute_type']] == 'range')) {
@@ -180,7 +180,6 @@ showPhys <- function(whichNames = 'all') {
                 df, Attribute_value == TRUE | Attribute_value == FALSE
             )
         }
-
         if (all(parentColNames %in% colnames(df))) {
             df$Parent_NCBI_ID <- stringr::str_squish(
                 as.character(df$Parent_NCBI_ID)
@@ -194,8 +193,9 @@ showPhys <- function(whichNames = 'all') {
             )
             df <- dplyr::left_join(df, rp, by = "NCBI_ID")
         }
-        spreadsheets[[i]] <- df
-    }
+        df
+    })
+    names(spreadsheets) <- links$physiology
     return(spreadsheets)
 }
 

@@ -72,7 +72,9 @@
         'isolation site'
         ## colony color (delete)
     )
-
+    
+    ## Modifying an already existing vector rather than creating a list
+    ## Keeping this for loop
     for (i in seq_along(attrNames)) {
         splitDf[[attrNames[i]]] <- .catToLog(splitDf[[attrNames[i]]])
         if (attrNames[i] %in% c('aerophilicity', 'shape')) {

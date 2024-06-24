@@ -287,6 +287,8 @@ getTaxonSignatures <- function(tax, bp, ...) {
         minValues <- thr$lower
         maxValues <- thr$upper
         dat$tmp_col <- NA
+        ## This for loop modify a series of vectors rather than creating
+        ## a list. Result has been pre-allocated in those vectors.
         for (i in seq_along(attrName)) {
             if (is.na(minValues[i]))
                 minValues[i] <- min(dat$Attribute_value) - 0.01
@@ -357,18 +359,16 @@ getTaxonSignatures <- function(tax, bp, ...) {
     return(output)
 }
 
-## Function for downloading data on Zenodo
+## Function for downloading data from Zenodo
 .downloadZ <- function(record, forceDownload) {
     baseUrl <- paste0("https://zenodo.org/api/records/", record)
     req <- httr2::request(baseUrl)
     res <- httr2::req_perform(req)
     l <- httr2::resp_body_json(res)
-
     fileNamesApi <- purrr::map_chr(l$files, ~ .x$links$self)
     fileNamesUrl <- sub(
         "(^.*)(api/)(.*)(/content$)", "\\1\\3", fileNamesApi
     )
-
     rpath <- .getResource(
         rname = paste0("bugphyzz.zip"),
         url = fileNamesUrl, verbose = TRUE, force = forceDownload
@@ -376,16 +376,13 @@ getTaxonSignatures <- function(tax, bp, ...) {
     tempDir <- tempdir()
     utils::unzip(zipfile = rpath, exdir = tempDir, junkpaths = TRUE)
     files <- list.files(tempDir, pattern = "csv", full.names = TRUE)
-
-    output <- vector("list", length(files))
-    for (i in seq_along(output)) {
-        output[[i]] <- utils::read.csv(files[i], header = TRUE, skip = 1) |>
+    lapply(files, function(x) {
+        utils::read.csv(x, header = TRUE, skip = 1) |> 
             dplyr::mutate(Attribute = tolower(Attribute))
-    }
-    return(output)
+    })
 }
 
-## Function for downloading data on GitHub
+## Function for downloading data from GitHub
 .downloadGH <- function(version, forceDownload) {
     fileSuffix <- c("binary", "multistate", "numeric")
     urls <- paste0(
@@ -393,16 +390,13 @@ getTaxonSignatures <- function(tax, bp, ...) {
         "/bugphyzz_", fileSuffix, ".csv"
     )
     names(urls) <-  c("binary", "multistate", "numeric")
-    output <- vector("list", length(urls))
-    for (i in seq_along(output)) {
+    lapply(seq_len(length(urls)), function(i) {
         message("Importing ", names(urls)[i], " data...")
-        names(output)[i] <- names(urls)[i]
         rpath <- .getResource(
             rname = paste0("bugphyzz_", names(urls)[i], ".csv"),
             url = urls[i], verbose = TRUE, force = forceDownload
         )
-        output[[i]] <- utils::read.csv(rpath, header = TRUE, skip = 1) |>
+        utils::read.csv(rpath, header = TRUE, skip = 1) |>
             dplyr::mutate(Attribute = tolower(Attribute))
-    }
-    return(output)
+    })
 }
