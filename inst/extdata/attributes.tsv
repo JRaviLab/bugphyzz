@@ -171,7 +171,7 @@
 "COGEM pathogenicity rating"	"COGEM pathogenicity rating"	"integer"	NA	NA
 "antimicrobial sensitivity"	"antimicrobial sensitivity"	"logical"	NA	NA
 "biofilm formation"	"biofilm formation"	"logical"	"APO:0000159"	"The ability to form a layer on solid surfaces with or without other microorganisms."
-"Butyrate-Producing Bacteria"	"butyrate producing"	"numeric"	"NCIT:C126417"	"Any anaerobic bacteria that metabolizes complex carbohydrates to produce butyrate. These microorganisms may form colonies in the intestines of mammals; their presence may aid the host by catabolizing undigested fiber and starch. Additionally, butyrate is metabolized by colonic epithelial cells and may protect the host against ulcerative colitis and cancer."
+"Butyrate-Producing Bacteria"	"Butyrate-Producing Bacteria;butyrate producing"	"numeric"	"NCIT:C126417"	"Any anaerobic bacteria that metabolizes complex carbohydrates to produce butyrate. These microorganisms may form colonies in the intestines of mammals; their presence may aid the host by catabolizing undigested fiber and starch. Additionally, butyrate is metabolized by colonic epithelial cells and may protect the host against ulcerative colitis and cancer."
 "acetate producing"	"acetate producing"	"numeric"	NA	NA
 "lactate producing"	"lactate producing"	"numeric"	NA	NA
 "mutation rate per site per year"	"mutation rates per site per year"	"numeric"	NA	NA
