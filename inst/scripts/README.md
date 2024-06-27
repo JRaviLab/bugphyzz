@@ -121,10 +121,10 @@ https://raw.githubusercontent.com/waldronlab/taxPProValidation/a7a31b0/validatio
 
 The code used, which was executed directly in the extdata directory, was:
 
-This is version 1.0.2
+This is version 1.0.4
 
 ```bash
-wget https://raw.githubusercontent.com/waldronlab/taxPProValidation/a7a31b0/validation_summary.tsv
+wget https://raw.githubusercontent.com/waldronlab/taxPProValidation/cc45761/validation_summary.tsv
 ```
 
 | Column name | Description |
