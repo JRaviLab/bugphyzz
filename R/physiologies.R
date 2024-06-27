@@ -8,7 +8,7 @@
 #' @param keyword Character vector with one or more valid keywords.
 #' Valid keyboards can be checked with \code{showPhys}. If 'all', all
 #' physiologies are imported.
-#' @param full_source Logical. If `TRUE`, the Attribute_source column will
+#' @param fullSource Logical. If `TRUE`, the Attribute_source column will
 #' contain full source information. If `FALSE`, the Attribute_source column
 #' will contain shortened versions of the sources. Default is `FALSE`.
 #'
@@ -20,7 +20,7 @@
 #' l <- physiologies('all')
 #' df <- physiologies('aerophilicity')[[1]]
 #'
-physiologies <- function(keyword = 'all', full_source = FALSE) {
+physiologies <- function(keyword = 'all', fullSource = FALSE) {
     keyword <- .checkKeyword(keyword)
     cond1 <- any(keyword %in% showPhys('spreadsheets'))
     cond2 <- any(keyword %in% showPhys('bacdive'))
@@ -30,23 +30,25 @@ physiologies <- function(keyword = 'all', full_source = FALSE) {
         spreadsheets <- spreadsheets[names(spreadsheets) %in% keyword]
         bacdive <- .reshapeBacDive(.getBacDive(verbose = FALSE))
         bacdive <- bacdive[names(bacdive) %in% keyword]
-        physiologies <- vector('list', length(keyword))
-        for (i in seq_along(keyword)) {
+        physiologies <- lapply(seq_along(keyword), function(i) {
             df1 <- spreadsheets[[keyword[i]]]
             df2 <- bacdive[[keyword[i]]]
-            physiologies[[i]] <- dplyr::bind_rows(df1, df2)
-            names(physiologies)[i] <- keyword[i]
+            o <- dplyr::bind_rows(df1, df2)
             message('Finished ', keyword[i], '.')
-        }
+            o
+        })
+        names(physiologies) <- keyword
     } else if (cond1 && !cond2) {
         spreadsheets <- .importSpreadsheets(keyword = keyword)
         physiologies <- spreadsheets[names(spreadsheets) %in% keyword]
+        ## Not creating a vector. Only usin the side effect of the for loop.
         for (i in seq_along(keyword)) {
             message('Finished ', keyword[i], '.')
         }
     } else if (!cond1 && cond2) {
         bacdive <- .reshapeBacDive(.getBacDive(verbose = FALSE))
         physiologies <- bacdive[names(bacdive) %in% keyword]
+        ## Not creating a vector. Only using the side effect of the for loop.
         for (i in seq_along(keyword)) {
             message('Finished ', keyword[i], '.')
         }
@@ -62,20 +64,19 @@ physiologies <- function(keyword = 'all', full_source = FALSE) {
             ) |>
             dplyr::distinct()
 
-        if (full_source) {
-            df$Attribute_source <- df$full_source
+        if (fullSource) {
+            df$Attribute_source <- df$fullSource
         }
         df$full_source <- NULL
 
         df <- .reorderColumns(
             df = df,
             name = unique(df$Attribute_group),
-            attr_type = unique(df$Attribute_type)
+            attrType = unique(df$Attribute_type)
         )
 
         df <- as.data.frame(df[, vapply(df, \(y) !all(is.na(y)), logical(1))])
 
-        ## TODO this code could be somewhere else
         if (unique(df$Attribute_group) == 'aerophilicity') {
             df <- .homogenizeAerophilicityAttributeNames(df)
         }
@@ -92,7 +93,7 @@ physiologies <- function(keyword = 'all', full_source = FALSE) {
 #' imported with the \code{\link{physiologies}} function. This function
 #' should be used by developers/curators.
 #'
-#' @param which_names A character string. Options: 'all' (default),
+#' @param whichNames A character string. Options: 'all' (default),
 #' 'spreadsheets', 'bacdive'.
 #'
 #' @return A character vector with the names of the physiologies.
@@ -103,20 +104,20 @@ physiologies <- function(keyword = 'all', full_source = FALSE) {
 #' showPhys('bacdive')
 #' showPhys('spreadsheets')
 #'
-showPhys <- function(which_names = 'all') {
+showPhys <- function(whichNames = 'all') {
     fname <- system.file(
         'extdata', 'spreadsheet_links.tsv', package = 'bugphyzz'
     )
     links <- utils::read.table(fname, header = TRUE, sep = '\t')
-    spreadsheet_phys <- links[['physiology']]
-    if (which_names == 'all')
-        ## bacdive_phys_names is a character vector saved as internal data
-        phys_names <- sort(unique(c(spreadsheet_phys, bacdive_phys_names)))
-    if (which_names == 'spreadsheets')
-        phys_names <- spreadsheet_phys
-    if (which_names == 'bacdive')
-        phys_names <- bacdive_phys_names
-    return(phys_names)
+    spreadsheetPhys <- links[['physiology']]
+    if (whichNames == 'all')
+        ## bacdivePhysNames is a character vector saved as internal data
+        physNames <- sort(unique(c(spreadsheetPhys, bacdivePhysNames)))
+    if (whichNames == 'spreadsheets')
+        physNames <- spreadsheetPhys
+    if (whichNames == 'bacdive')
+        physNames <- bacdivePhysNames
+    return(physNames)
 }
 
 ## Helper function for physiologies
@@ -135,13 +136,13 @@ showPhys <- function(which_names = 'all') {
             keyword <- showPhys()
         }
     }
-    valid_keywords <- showPhys()
-    lgl_vct <- keyword %in% valid_keywords
-    if (any(!lgl_vct) ) {
-        invalid_keywords <- keyword[!lgl_vct]
+    validKeywords <- showPhys()
+    lglVct <- keyword %in% validKeywords
+    if (any(!lglVct) ) {
+        invalidKeywords <- keyword[!lglVct]
         stop(
             "Invalid keyword(s): ",
-            paste0(invalid_keywords, collapse = ', '), '.',
+            paste0(invalidKeywords, collapse = ', '), '.',
             " Check valid keywords with showPhys() or use 'all' to import all",
             " physiologies.",
             call. = FALSE
@@ -152,51 +153,49 @@ showPhys <- function(which_names = 'all') {
 
 ## Helper function for physiologies
 .importSpreadsheets <- function(keyword) {
-    parent_col_names <- c('Parent_name', 'Parent_NCBI_ID', 'Parent_rank')
+    parentColNames <- c('Parent_name', 'Parent_NCBI_ID', 'Parent_rank')
     fname <- system.file(
         'extdata', 'spreadsheet_links.tsv', package = 'bugphyzz'
     )
     links <- utils::read.table(fname, header = TRUE, sep = '\t')
     links <- links[links[['physiology']] %in% keyword,]
-    spreadsheets <- vector('list', nrow(links))
-    for (i in seq_along(spreadsheets)) {
-        phys_name <- links[i, 'physiology', drop = FALSE][[1]]
-        attr_type <- links[i, 'attribute_type', drop = FALSE][[1]]
-        names(spreadsheets)[i] <- phys_name
+    spreadsheets <- lapply(seq_len(nrow(links)), function(i) {
+        physName <- links[i, 'physiology', drop = FALSE][[1]]
+        attrType <- links[i, 'attribute_type', drop = FALSE][[1]]
         url <- links[i, 'link', drop = FALSE][[1]]
         df <- dplyr::distinct(utils::read.csv(url))
-        df[['Attribute_type']] <- attr_type
-        df[['Attribute_group']] <- phys_name
+        df[['Attribute_type']] <- attrType
+        df[['Attribute_group']] <- physName
         df[['NCBI_ID']] <- as.character(df[['NCBI_ID']])
         df <- df[!is.na(df[['Attribute_value']]),]
-
+        
         if (unique(df[['Attribute_type']]) == 'numeric') {
             df <- .numericToRange(df)
         } else if (unique(df[['Attribute_type']] == 'range')) {
             df <- .modifyRange(df)
         } else if (
-            unique(df[['Attribute_type']] %in% .DISCRETE_ATTRIBUTE_TYPES())
+            unique(df[['Attribute_type']] %in% .discreteAttributeTypes())
         ) {
             df <- dplyr::filter(
                 df, Attribute_value == TRUE | Attribute_value == FALSE
             )
         }
-
-        if (all(parent_col_names %in% colnames(df))) {
+        if (all(parentColNames %in% colnames(df))) {
             df$Parent_NCBI_ID <- stringr::str_squish(
                 as.character(df$Parent_NCBI_ID)
             )
         } else {
-            ## ranks_parents is an internal object (data.frame) in bugphyzz
+            ## ranksParents is an internal object (data.frame) in bugphyzz
             rp <- purrr::modify_at(
-                .x = ranks_parents,
+                .x = ranksParents,
                 .at = c('NCBI_ID', 'Parent_NCBI_ID'),
                 .f = as.character
             )
             df <- dplyr::left_join(df, rp, by = "NCBI_ID")
         }
-        spreadsheets[[i]] <- df
-    }
+        df
+    })
+    names(spreadsheets) <- links$physiology
     return(spreadsheets)
 }
 
@@ -264,7 +263,7 @@ showPhys <- function(which_names = 'all') {
 }
 
 ## helper function for .importSpreadsheets
-.DISCRETE_ATTRIBUTE_TYPES <- function() {
+.discreteAttributeTypes <- function() {
     fname <- system.file(
         'extdata', 'spreadsheet_links.tsv', package = 'bugphyzz'
     )
@@ -277,33 +276,33 @@ showPhys <- function(which_names = 'all') {
     fpath <- system.file(
         'extdata', 'attribute_sources.tsv', package = 'bugphyzz'
     )
-    source_data <- utils::read.table(
+    sourceData <- utils::read.table(
         file = fpath, header = TRUE, sep = '\t', quote = '',
         check.names = FALSE, comment.char = ''
     )
-    dplyr::left_join(dat, source_data, by = 'Attribute_source')
+    dplyr::left_join(dat, sourceData, by = 'Attribute_source')
 }
 
 ## Helper function for physiologies
-.reorderColumns <- function(df, name = NULL, attr_type) {
-    col_names <- colnames(df)
-    req_cols <- .requiredColumns(attr_type)
-    cols_lgl <- req_cols %in% col_names
-    if (!all(cols_lgl)) {
-        missing_cols <- paste0(req_cols[!cols_lgl], collapse = ', ')
+.reorderColumns <- function(df, name = NULL, attrType) {
+    colNames <- colnames(df)
+    reqCols <- .requiredColumns(attrType)
+    colsLgl <- reqCols %in% colNames
+    if (!all(colsLgl)) {
+        missingCols <- paste0(reqCols[!colsLgl], collapse = ', ')
         if (!is.null(name)) {
             msg <- paste0(
                 'Missing columns in ', name, '.', ' Missing columns are: ',
-                missing_cols
+                missingCols
             )
         } else {
             msg <- paste0(
-                'Missing columns.', ' Missing columns are: ', missing_cols
+                'Missing columns.', ' Missing columns are: ', missingCols
             )
         }
         warning(msg, call. = FALSE)
     }
-    cols <- req_cols[cols_lgl]
+    cols <- reqCols[colsLgl]
     df |>
         dplyr::relocate(dplyr::all_of(cols))
 }
@@ -321,12 +320,12 @@ showPhys <- function(which_names = 'all') {
 }
 
 ## Required columns
-.requiredColumns <- function(attr_type) {
+.requiredColumns <- function(attrType) {
     fname <- system.file("extdata/curation_template.tsv", package = "bugphyzz")
     df <- utils::read.table(fname, sep = "\t", header = TRUE)
-    lgl_vct_1 <- df$requiredness == "required"
-    lgl_vct_2 <- grepl(attr_type, df$attribute_types)
-    df <- df[lgl_vct_1 & lgl_vct_2,]
+    lglVct1 <- df$requiredness == "required"
+    lglVct2 <- grepl(attrType, df$attribute_types)
+    df <- df[lglVct1 & lglVct2,]
     df[order(df[["required_column_order"]]), , drop = FALSE]
     output <- df[['column_name']]
     return(output)
@@ -334,11 +333,11 @@ showPhys <- function(which_names = 'all') {
 
 ## Generate a template for a bugphyzz dataset
 .template <- function(dataset) {
-    template_tsv <- system.file(
+    templateTsv <- system.file(
         "extdata/curation_template.tsv", package = "bugphyzz"
     )
     template <- utils::read.table(
-        file = template_tsv, sep = "\t", check.names = FALSE, header = TRUE,
+        file = templateTsv, sep = "\t", check.names = FALSE, header = TRUE,
         allowEscapes = TRUE )
     # template <- readr::read_tsv(template_tsv, show_col_types = FALSE)
     template[template[["column_name"]] %in% colnames(dataset), ]
@@ -359,11 +358,11 @@ showPhys <- function(which_names = 'all') {
         'extdata/spreadsheet_links.tsv', package = 'bugphyzz'
     )
     links <- utils::read.table(fname1, header = TRUE, sep = '\t')
-    select_cols <- c("physiology", "source_link")
+    selectCols <- c("physiology", "source_link")
     phys_links <- links |>
-        dplyr::select(tidyselect::all_of(select_cols))
+        dplyr::select(tidyselect::all_of(selectCols))
     custom_links <- .customLinks() |>
-        dplyr::select(tidyselect::all_of((select_cols)))
+        dplyr::select(tidyselect::all_of((selectCols)))
     links <- dplyr::bind_rows(phys_links, custom_links)
     x |>
         dplyr::left_join(links, by = c("dataset" = "physiology"))

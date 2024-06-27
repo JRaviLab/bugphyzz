@@ -1,0 +1,48 @@
+---
+title: "Sources"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sources}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  message = FALSE,
+  warning = FALSE,
+  echo = FALSE
+)
+```
+
+```{r setup}
+library(DT)
+library(bugphyzz)
+library(dplyr)
+library(purrr)
+```
+
+## Sources
+
+```{r, echo=FALSE}
+sources_fname <- system.file(
+  "extdata", "attribute_sources.tsv", package = "bugphyzz", mustWork = TRUE
+)
+sources <- readr::read_tsv(sources_fname, show_col_types = FALSE) |> 
+  dplyr::rename(
+    Source = Attribute_source,
+    `Confidence in curation` = Confidence_in_curation,
+    `Full source` = full_source
+  )
+```
+
+The `r nrow(sources)` sources of annotations in bugphyzza.
+exp = experimental data; igc = inferred from genome context; tas = traceable
+author statement; nast = non-traceable author statement.
+
+```{r, echo=FALSE}
+knitr::kable(sources)
+```

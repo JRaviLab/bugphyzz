@@ -59,7 +59,8 @@ Imports:
     tidyselect,
     BiocFileCache,
     httr2,
-    tools
+    tools,
+    S4Vectors
 Suggests: 
     DT,
     forcats,

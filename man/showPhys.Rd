@@ -4,10 +4,10 @@
 \alias{showPhys}
 \title{Show list of available physiologies (for devs)}
 \usage{
-showPhys(which_names = "all")
+showPhys(whichNames = "all")
 }
 \arguments{
-\item{which_names}{A character string. Options: 'all' (default),
+\item{whichNames}{A character string. Options: 'all' (default),
 'spreadsheets', 'bacdive'.}
 }
 \value{

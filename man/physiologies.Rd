@@ -4,14 +4,14 @@
 \alias{physiologies}
 \title{Import physiologies (for devs)}
 \usage{
-physiologies(keyword = "all", full_source = FALSE)
+physiologies(keyword = "all", fullSource = FALSE)
 }
 \arguments{
 \item{keyword}{Character vector with one or more valid keywords.
 Valid keyboards can be checked with \code{showPhys}. If 'all', all
 physiologies are imported.}
 
-\item{full_source}{Logical. If \code{TRUE}, the Attribute_source column will
+\item{fullSource}{Logical. If \code{TRUE}, the Attribute_source column will
 contain full source information. If \code{FALSE}, the Attribute_source column
 will contain shortened versions of the sources. Default is \code{FALSE}.}
 }

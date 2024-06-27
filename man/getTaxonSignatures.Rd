@@ -8,7 +8,7 @@ getTaxonSignatures(tax, bp, ...)
 }
 \arguments{
 \item{tax}{A valid NCBI ID or taxon name. If taxon name is used, the
-argument tax_id_type = "Taxon_name" must also be used.}
+argument taxIdType = "Taxon_name" must also be used.}
 
 \item{bp}{List of data.frames imported with \code{importBugphyzz}.}
 
@@ -27,6 +27,6 @@ taxid <- "562"
 taxonName <- "Escherichia coli"
 bp <- importBugphyzz()
 sig_names_1 <- getTaxonSignatures(taxid, bp)
-sig_names_2 <- getTaxonSignatures(taxonName, bp, tax_id_type = "Taxon_name")
+sig_names_2 <- getTaxonSignatures(taxonName, bp, taxIdType = "Taxon_name")
 
 }

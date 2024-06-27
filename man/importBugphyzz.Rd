@@ -5,22 +5,22 @@
 \title{Import bugphyzz}
 \usage{
 importBugphyzz(
-  version = "10.5281/zenodo.10980813",
-  force_download = FALSE,
+  version = "10.5281/zenodo.12574596",
+  forceDownload = FALSE,
   v = 0.8,
-  exclude_rarely = TRUE
+  excludeRarely = TRUE
 )
 }
 \arguments{
 \item{version}{Character string indicating the version. Default is the
 latest release on Zenodo.  Options: Zenodo DOI, GitHub commit hash, or devel.}
 
-\item{force_download}{Logical value. Force a fresh download of the data or
+\item{forceDownload}{Logical value. Force a fresh download of the data or
 use the one stored in the cache (if available). Default is FALSE.}
 
 \item{v}{Validation value. Default 0.8 (see details).}
 
-\item{exclude_rarely}{Default is TRUE. Exclude values with
+\item{excludeRarely}{Default is TRUE. Exclude values with
 Frequency == FALSE (see details).}
 }
 \value{
@@ -29,7 +29,8 @@ A list of tidy data frames.
 \description{
 \code{importBugphyzz} imports bugphyzz annotations as a list of
 tidy data.frames. To learn more about the structure of the data.frames
-please check the bugphyzz vignette with \code{browseVignettes("bugphyzz")}.
+please check the bugphyzz vignette with \code{browseVignettes("bugphyzz")} or
+`vignette("bugphyzz", "bugphyzz").
 }
 \details{
 \subsection{Data structure}{
@@ -51,14 +52,21 @@ imported. The minimum value can be adjusted with the \code{v} argument (only
 values between 0 and 1).
 }
 
-\subsection{Frequency (exclude_rarely argument)}{
+\subsection{Frequency (excludeRarely argument)}{
 
 One of the variables in the bugphyzz data.frames is "Frequency", which
 can adopt values of
 "always", "usually", "sometimes", "rarely", or "never". By default
 "never" and "rarely" are excluded. "rarely" could be included with
-\code{exclude_rarely = FALSE}. To learn more about these frequency keywords
+\code{excludeRarely = FALSE}. To learn more about these frequency keywords
 please check the bugphyzz vignette with \code{browseVignettes("bugphyzz")}.
+}
+
+\subsection{Sources}{
+
+By default, the datasets imported with the \code{importBugphuzz} function
+will always return a shortened version of the source. Please use
+vigette("sources", "bugphyz") to see the full sources.
 }
 }
 \examples{
