@@ -10,7 +10,7 @@
 .importBacDiveExcel <- function(verbose = FALSE) {
     if (verbose)
         message('Importing BacDive...')
-    url <- 'https://docs.google.com/spreadsheets/d/1smQTi1IKt4wSGTrGTW25I6u47M5txZkq/export?format=csv'
+    url <- 'https://docs.google.com/spreadsheets/d/1mq3Crfis_CoJimLVrIoDFGf592bvMAqo/export?format=csv'
     bacdive <- utils::read.csv(url)
     colnames(bacdive) <- tolower(colnames(bacdive))
     return(bacdive)
