@@ -1,6 +1,6 @@
 Package: bugphyzz
 Title: A harmonized data resource and software for enrichment analysis of microbial physiologies
-Version: 0.99.7
+Version: 0.99.8
 Authors@R: 
     c(
         person(
@@ -66,7 +66,6 @@ Suggests:
     forcats,
     ggplot2,
     htmltools,
-    taxizedb,
     knitr,
     rmarkdown,
     sessioninfo,
