@@ -66,7 +66,7 @@ please check the bugphyzz vignette with \code{browseVignettes("bugphyzz")}.
 
 By default, the datasets imported with the \code{importBugphuzz} function
 will always return a shortened version of the source. Please use
-vigette("sources", "bugphyz") to see the full sources.
+vigette("sources", "bugphyzz") to see the full sources.
 }
 }
 \examples{

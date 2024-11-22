@@ -46,7 +46,7 @@ A list of character vectors with scientific names or taxids.
 \description{
 \code{makeSignatures} Creates signatures for a list of bug signatures from
 a tidy data.frame imported through the \code{importBugphyzz} function. Please
-run \code{browseVignettes("bugphyz")} for detailed examples.
+run \code{browseVignettes("bugphyzz")} for detailed examples.
 }
 \examples{
 
