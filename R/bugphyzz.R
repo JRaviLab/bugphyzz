@@ -45,11 +45,11 @@ utils::globalVariables(c(
 #' "never" and "rarely" are excluded. "rarely" could be included with
 #' `excludeRarely = FALSE`. To learn more about these frequency keywords
 #' please check the bugphyzz vignette with `browseVignettes("bugphyzz")`.
-#' 
+#'
 #' ## Sources
 #' By default, the datasets imported with the `importBugphuzz` function
 #' will always return a shortened version of the source. Please use
-#' vigette("sources", "bugphyz") to see the full sources.
+#' vigette("sources", "bugphyzz") to see the full sources.
 #'
 #' @return A list of tidy data frames.
 #' @export
@@ -120,7 +120,7 @@ importBugphyzz <- function(
 #'
 #' \code{makeSignatures} Creates signatures for a list of bug signatures from
 #' a tidy data.frame imported through the `importBugphyzz` function. Please
-#' run `browseVignettes("bugphyz")` for detailed examples.
+#' run `browseVignettes("bugphyzz")` for detailed examples.
 #'
 #' @param dat A data.frame.
 #' @param taxIdType A character string. Valid options: NCBI_ID, Taxon_name.
@@ -160,7 +160,7 @@ makeSignatures <- function(
     taxLevel <- match.arg(arg = taxLevel, several.ok = TRUE)
     evidence <- match.arg(arg = evidence, several.ok = TRUE)
     frequency <- match.arg(arg = frequency, several.ok = TRUE)
-    
+
     attrType <- unique(dat$Attribute_type)
     if ("mixed" %in% taxLevel) {
         taxLevel <- c(
@@ -169,10 +169,10 @@ makeSignatures <- function(
         )
     }
     dat <- dat |>
-        {\(y) y[which(y$Rank %in% taxLevel),]}() |> 
-        {\(y) y[which(y$Evidence %in% evidence),]}() |> 
+        {\(y) y[which(y$Rank %in% taxLevel),]}() |>
+        {\(y) y[which(y$Evidence %in% evidence),]}() |>
         {\(y) y[which(y$Frequency %in% frequency),]}()
-        
+
     if (!nrow(dat)) {
         warning(
             "Not enough data for creating signatures.",
@@ -236,7 +236,7 @@ getTaxonSignatures <- function(tax, bp, ...) {
     dat$Attribute <- paste0(
         "bugphyz:", dat$Attribute, "|", dat$Attribute_value
     )
-    dat |> 
+    dat |>
         {\(y) S4Vectors::split(y, y$Attribute)}() |>
         lapply(function(x) unique(x[[taxIdType]]))
 }
@@ -257,7 +257,7 @@ getTaxonSignatures <- function(tax, bp, ...) {
             )
             max <- max(dat$Attribute_value)
         }
-        
+
         dat <- dat[
             which(dat$Attribute_value >= min & dat$Attribute_value <= max),
         ]
@@ -361,7 +361,7 @@ getTaxonSignatures <- function(tax, bp, ...) {
     utils::unzip(zipfile = rpath, exdir = tempDir, junkpaths = TRUE)
     files <- list.files(tempDir, pattern = "csv", full.names = TRUE)
     lapply(files, function(x) {
-        utils::read.csv(x, header = TRUE, skip = 1) |> 
+        utils::read.csv(x, header = TRUE, skip = 1) |>
             dplyr::mutate(Attribute = tolower(Attribute))
     })
 }
